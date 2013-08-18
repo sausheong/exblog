@@ -1,0 +1,72 @@
+<h2>
+  <i class="icon-bookmark">
+    <%= @post.heading%>
+  </i>
+</h2>
+
+<small class="muted">
+  <% {{year, month, day}, {hour, min, _sec}} = @post.created_at%>
+  by <a href="<%= @post.user.user_link %>"><%= @post.user.user_name%></a> on <%= "#{day}/#{month}/#{year} #{hour}:#{min}"%>
+  <%= if @user == @post.user do %>
+  &middot;
+  <a href="/post/edit/<%= @post.id%>"> edit </a>
+  &middot;
+  <a href="/post/delete/<%= @post.id%>"> delete </a>
+  <% end %>
+</small>
+
+<hr/>
+
+<div class="row">
+  <div class="span12">
+    <%= Markdown.to_html @post.content%>
+  </div>
+</div>
+
+
+<h2>
+  <i class="icon-comment-alt">
+    Comments
+  </i>
+</h2>  
+
+<%= lc comment inlist @comments do %>
+  <div class="row" id="comment_<%= comment.id%>">
+    <div class="span1">
+      <img class="image-polaroid" src="<%= comment.user.user_pic_url%>"/>
+    </div>
+    <div class="span11">
+      <%= Markdown.to_html comment.content  %>
+      <small class="muted">
+        <% {{year, month, day}, {hour, min, _sec}} = comment.created_at%>
+        by <a href="<%= comment.user.user_link %>"><%= comment.user.user_name%></a> on <%= "#{day}/#{month}/#{year} #{hour}:#{min}"%>
+        <% IO.inspect comment.user %>
+        <% IO.inspect @user %>
+        <%= if @user == comment.user do %>
+          &middot;
+          <a href="/comment/edit/<%= comment.id%>"> edit </a>
+          &middot;
+          <a href="/comment/delete/<%= comment.id%>"> delete </a>        
+        <% end %>
+      </small>  
+    </div>
+  </div>
+  <hr/>
+<% end %>
+
+<h3>
+  <i class="icon-comment">
+    Your comment
+  </i>
+</h3>
+
+<div class="row">
+  <div class="span12">
+    <form method="post" action="/comment">
+      <%= render "_comment_fields.html"%>
+      <input type="hidden" name="post_id" value="<%= @post.id %>">
+      <input type="submit" value="Add comment" class="btn btn-default">
+    
+    </form>
+  </div>
+</div>

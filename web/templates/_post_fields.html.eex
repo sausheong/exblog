@@ -1,0 +1,17 @@
+<div class="row">
+  <fieldset>
+    <div class="form-group">
+      <label>
+        <strong> Heading </strong>
+      </label>  
+      <input class="form-control span10" type="text" name="heading" placeholder="Type your post heading here" value="<%= @post.heading %>">    
+    </div>
+    <div class="form-group">
+      <label>
+        <strong> Content </strong>
+      </label>
+      <textarea class="form-control span10" name="content" placeholder="Type your post here" rows="10"><%= @post.content %></textarea>
+    </div>
+    
+  </fieldset>
+</div>

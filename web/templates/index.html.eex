@@ -1,0 +1,23 @@
+<%= lc post inlist @posts do %>
+
+<div class="row">
+  <div class="col-lg-9">
+    <h2 class="text-info">
+      <a href="/post/<%= post.id %>">
+        <i class="icon-bookmark-empty">
+          <%= post.heading%>
+        </i>
+      </a>
+    </h2>
+    <small class="muted">
+      <% {{year, month, day}, {hour, min, _}} = post.created_at%>
+      by <a href="<%= post.user.user_link %>"><%= post.user.user_name%></a> on <%= "#{day}/#{month}/#{year} #{hour}:#{min}"%>
+    </small>
+    <p>&nbsp;</p>
+    <p>
+      <%= Markdown.to_html post.content  %>
+    </p>
+  </div>
+</div>
+
+<% end %>

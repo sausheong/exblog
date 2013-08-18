@@ -1,0 +1,17 @@
+<h2>
+  <i class="icon-warning-sign">
+    You are not authorized to do this
+  </i>
+</h2>
+
+<p>
+  You are not allowed to do this. Please go back to the previous page and try again.
+</p>
+
+<a href="#" onclick="javascript:history.back();" class="btn">
+  <i class="icon-circle-arrow-left">
+    Go Back
+  </i>
+</a>
+
+  

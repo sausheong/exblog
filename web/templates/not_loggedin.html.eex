@@ -1,0 +1,15 @@
+<h2>
+  <i class="icon-warning-sign">
+    You are not logged in yet
+  </i>
+</h2>
+
+<p>
+  You need to be logged in to do this. Please log in now.
+</p>
+
+<a href="/auth" class="btn">
+  <i class="icon-facebook"> &nbsp; Sign in</i>
+</a>
+
+  

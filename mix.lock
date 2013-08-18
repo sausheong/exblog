@@ -1,0 +1,10 @@
+[ "cowboy": {:git, "git://github.com/extend/cowboy.git", "3b4c0588e9bb98307576f7d6e0b52ea434138e62", []},
+  "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "b44250c2f99a7738b09af8db001256e511452ec0", []},
+  "ex_doc": {:git, "git://github.com/elixir-lang/ex_doc.git", "37f5b9083456ea4b917c45fd4a1ddebd58c99882", []},
+  "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "bc4f83ed0e433db3e1f7dbfb6377210990a35635", []},
+  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "208277b69fa9cc1b68f37d1261a77abe6487a677", []},
+  "jsonex": {:git, "git://github.com/marcelog/jsonex.git", "feb4a5b8fbb62e3910923a4325795576fa014c34", []},
+  "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "cb14b92a228e51f7bdcaa7eb17f035e4a5c0b47d", [{:tag, "v1.3.3"}]},
+  "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
+  "ossp_uuid": {:git, "git://github.com/yrashk/erlang-ossp-uuid.git", "ee7bb6ac02f96abe6505c88b2696dc7aa1921e15", []},
+  "ranch": {:git, "git://github.com/extend/ranch.git", "4f70a16bbe08e446e8fec248ca345d5f8e7df038", [{:ref, "0.8.4"}]} ]

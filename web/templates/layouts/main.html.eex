@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/flatly/bootstrap.min.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <link href="http://getbootstrap.com/assets/css/docs.css" rel="stylesheet">
+  <style>
+    body { font-size: 18px; line-height: 26px; }
+    li {line-height: 1.4em}
+    li > a {text-decoration: underline; }
+    textarea {font-size: 0.8em; font-family: "Courier New", Courier, monospace; line-height: 1.1em; color: black;}  
+  </style>
+</head>
+<body style="padding-top: 70px;">
+  <div class="container">
+    <%= render "toolbar.html" %>
+    <%= content_for(:template) %>
+  </div>
+  <br/>
+  <div class="container">
+    <div class="footer">
+      <p class="muted pull-right">
+        <small> &copy; Chang Sau Sheong 2013
+      </p>
+    </div>
+  </div>
+</body>
+</html>

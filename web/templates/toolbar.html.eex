@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">ExBlog</a>
+        <ul class="nav navbar-nav">
+          <%= if @user == nil do %>
+          <li><a href="/auth"><i class="icon-facebook"> &nbsp; Sign in</i></a></li>          
+          <% else %>
+          <li><a href="/post/new"><i class="icon-plus-sign-alt"> &nbsp; New Post</i></a></li>
+          <li><a href="/signout"><i class="icon-off"> &nbsp; Sign out</i></a></li>
+          <% end %>
+        </ul>    
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<h2>
+  <i class="icon-edit">
+    Edit Post
+  </i>
+</h2>
+
+<form method="post" action="/post/update">
+  <p class="text-info lead">
+    Modify this post.
+  </p>
+  <%= render "_post_fields.html"%>
+  <input type="hidden" name="uuid" value="<%= @post.id%>">
+  <input type="submit" value="Update Post" class="btn btn-default">
+</form>

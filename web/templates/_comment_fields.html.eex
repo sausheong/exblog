@@ -1,0 +1,7 @@
+<div class="row">
+  <fieldset>
+    <div class="form-group">
+      <textarea class="form-control span10" name="content" placeholder="Type your comment here" rows="5"><%= @comment.content%></textarea>
+    </div>
+  </fieldset>
+</div>

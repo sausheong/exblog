@@ -1,0 +1,14 @@
+<h2>
+  <i class="icon-edit">
+    Edit Comment
+  </i>
+</h2>
+
+<form method="post" action="/comment/update">
+  <p class="text-info lead">
+    Modify this comment.
+  </p>
+  <%= render "_comment_fields.html"%>
+  <input type="hidden" name="uuid" value="<%= @comment.id%>">
+  <input type="submit" value="Update Comment" class="btn btn-default">
+</form>

@@ -1,0 +1,13 @@
+<h2>
+  <i class="icon-plus-sign-alt">
+    Add New Post
+  </i>
+</h2>
+
+<form method="post" action="/post">
+  <p class="text-info lead">
+    Type a new post into the fields and click on add to create it.    
+  </p>
+  <%= render "_post_fields.html"%>
+  <input type="submit" value="Add Post" class="btn btn-default">
+</form>
