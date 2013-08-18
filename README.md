@@ -55,6 +55,12 @@ def delete_session(conn, key) do
 end
 ```
 
+3. Because we have made changes to one of the dependencies, we need to re-compile all the dependencies (at least the ones we changed)
+
+```
+mix deps.compile
+```
+
 ### Create a Facebook app and get the app ID and the app secret
 
 I used Facebook to perform all authentication. So to deploy ExBlog properly you need to have a Facebook app. Go to https://developers.facebook.com/apps and create a new app. Fill up what you need and in the end you'll be provided an app ID and an app secret. Remember to also configure how the app integrates with Facebook (in the settings tab).
