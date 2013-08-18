@@ -1,6 +1,6 @@
 # ExBlog
 
-This is a bloging web application built with Elixir that uses Dynamo to serve web requests. It is an attempt to clone a previous blog application I wrote with Ruby (https://github.com/sausheong/easyblog). In that blog application, I wrote the whole application in 300+ lines of Ruby code. After learning a bit about Elixir and Dynamo, I decided to try to reproduce the same features, but with Elixir and Dynamo.
+This is a blogging web application built with Elixir that uses Dynamo to serve web requests. It is an attempt to clone a previous blog application I wrote with Ruby (https://github.com/sausheong/easyblog). In that blog application, I wrote the whole application in 300+ lines of Ruby code. After learning a bit about Elixir and Dynamo, I decided to try to reproduce the same features, but with Elixir and Dynamo.
 
 In short these are the features of ExBlog:
 
@@ -63,7 +63,7 @@ Select such that you integrate as a "Website with Facebook Login". For testing p
 
 With the app ID and app secret go to `<your exblog directory>/lib/exblog/environments/dev.exs`. This is the settings for your development environment. If you're setting up for test or production, open up `test.exs` or `prod.exs` accordingly. You should see a section at the bottom of the page like this:
   
-```
+```elixir
 config :facebook,
   app_id: "",
   secret: "",
@@ -80,7 +80,7 @@ Now you're ready to start up ExBlog. Run this on your console.
 mix do compile, server
 ```
 
-There'll be some warnings. Ignore them. I haven't figured out what's the best way to make it work without the warnings yet but they're harmless.
+~~There'll be some warnings. Ignore them. I haven't figured out what's the best way to make it work without the warnings yet but they're harmless.~~ José explained to me that it's because of the way I grouped my functions. Duh.
 
 The go to `http://localhost:4000` on your browser. The first time you run it there'll be some exceptions. Ignore them and refresh the page. Again this is because I haven't figured out how to set up Mnesia properly the first time. The exceptions are there because Mnesia is complaining they can't find the files, which actually gets generated right afterwards. 
 
@@ -99,7 +99,7 @@ My bad. My lame excuse is that I'm busy learning Elixir and Dynamo. Coming soon!
 
 I'm still learning Elixir so this is probably not what you're looking for if you're looking for some experienced Elixir programmer to copy from (I'm probably doing all sorts of things wrongly). But if you're looking at someone who has walked through the web application development path with Elixir and Dynamo and came out with an actual working application, this is it.
 
-When I tried my hand at it I didn't know about Ecto, and so I did everything with Mnesia (I didn't really relish directly access Postgres) as the storage backend. Now that I know about Ecto, that'll be what I'll be trying next.
+When I tried my hand at it I didn't know about Ecto, and so I did everything with Mnesia (I didn't really relish directly accessing Postgres) as the storage backend. Now that I know about Ecto, that'll be what I'll be trying next.
 
 
 ## Resources
