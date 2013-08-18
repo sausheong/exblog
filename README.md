@@ -1,6 +1,6 @@
 # ExBlog
 
-This is a project built with Elixir that uses Dynamo to serve web requests. It is an attempt to clone a previous blog application I wrote with Ruby (https://github.com/sausheong/easyblog). In that blog application, I wrote the whole application in 300+ lines of Ruby code. After learning a bit about Elixir and Dynamo, I decided to try to reproduce the same features, but with Elixir.
+This is a bloging web application built with Elixir that uses Dynamo to serve web requests. It is an attempt to clone a previous blog application I wrote with Ruby (https://github.com/sausheong/easyblog). In that blog application, I wrote the whole application in 300+ lines of Ruby code. After learning a bit about Elixir and Dynamo, I decided to try to reproduce the same features, but with Elixir and Dynamo.
 
 In short these are the features of ExBlog:
 
