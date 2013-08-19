@@ -148,7 +148,7 @@ defmodule Exblog.DBServer do
   end
 
   def get_posts do
-    posts = :gen_server.call(:dbserver, {:get_posts})
+    :gen_server.call(:dbserver, {:get_posts})
   end
 
   # -- interfaces for managing comments 
