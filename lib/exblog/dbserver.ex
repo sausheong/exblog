@@ -29,7 +29,9 @@ defmodule Exblog.DBServer do
   Adds a new post
   """
   def handle_call({:add_post, heading, content, user}, _from, _state) do
-    uuid = add_post(heading, content, user)
+    uuid = :ossp_uuid.make(:v4, :text)
+    post = Post.new id: uuid, created_at: :calendar.local_time(), heading: heading, content: content, user: user    
+    :mnesia.transaction(fn -> :mnesia.write(post) end)    
     {:reply, uuid, nil}
   end
 
@@ -37,30 +39,41 @@ defmodule Exblog.DBServer do
   Updates a post
   """
   def handle_call({:update_post, uuid, heading, content}, _from, _state) do
-    uuid = update_post(uuid, heading, content)
+    {:atomic, [post | _ ]} = :mnesia.transaction(fn -> :mnesia.read(Post, uuid) end)   
+    post = post.update(heading: heading, content: content)
+    :mnesia.transaction(fn -> :mnesia.write(post) end)
     {:reply, uuid, nil}
-  end
-
-  @doc """
-  Deletes a post
-  """
-  def handle_call({:delete_post, uuid}, _from, _state) do
-    delete_post(uuid)
-    {:reply, "ok", nil}
   end
 
   @doc """
   Returns a post given a uuid
   """
-  def handle_call({:get_post, uuid}, _from, _state) do    
-    {:reply, get_post(uuid), nil}    
+  def handle_call({:get_post, uuid}, _from, _state) do 
+    {:atomic, [post | _ ]} = :mnesia.transaction(fn -> :mnesia.read(Post, uuid) end)
+    {:reply, post, nil}    
   end
+  
+  @doc """
+  Deletes a post
+  """
+  def handle_call({:delete_post, uuid}, _from, _state) do
+    f = fn -> 
+      :mnesia.delete({Post, uuid}) 
+      {:atomic, comments} = get_comments(uuid)
+      lc comment inlist comments do
+        :mnesia.delete({Comment, comment.id}) 
+      end
+    end
+    :mnesia.transaction(f)
+    {:reply, "ok", nil}
+  end
+
 
   @doc """
   Gets all posts and sorts them according to date created
   """
-  def handle_call({:get_posts}, _from, _state) do
-    {:atomic, posts} = get_posts
+  def handle_call({:get_posts}, _from, _state) do    
+    {:atomic, posts} = :mnesia.transaction(fn -> :mnesia.table(Post) |> :qlc.eval end)
     order = fn(a, b) -> a.created_at > b.created_at end
     posts = :lists.sort(order, posts)
     {:reply, posts, nil}    
@@ -70,7 +83,9 @@ defmodule Exblog.DBServer do
   Adds a new comment to a post
   """
   def handle_call({:add_comment, post_id, content, user}, _from, _state) do
-    uuid = add_comment(post_id, content, user)
+    uuid = :ossp_uuid.make(:v4, :text)
+    comment = Comment.new id: uuid, created_at: :calendar.local_time(), content: content, user: user, post_id: post_id    
+    :mnesia.transaction(fn -> :mnesia.write(comment) end)
     {:reply, uuid, nil}
   end
 
@@ -78,7 +93,11 @@ defmodule Exblog.DBServer do
   Get all comments for a post
   """
   def handle_call({:get_comments, uuid}, _from, _state) do
-    {:atomic, comments} = get_comments(uuid)
+    f = fn -> 
+      pattern = Comment[post_id: uuid, _: :_]
+      :mnesia.match_object(Comment, pattern, :read) 
+    end        
+    {:atomic, comments} = :mnesia.transaction(f)
     order = fn(a, b) -> a.created_at > b.created_at end
     comments = :lists.sort(order, comments)
     {:reply, comments, nil}    
@@ -88,7 +107,9 @@ defmodule Exblog.DBServer do
   Updates a comment
   """
   def handle_call({:update_comment, uuid, content}, _from, _state) do
-    uuid = update_comment(uuid, content)
+    {:atomic, [comment | _ ]} = :mnesia.transaction(fn -> :mnesia.read(Comment, uuid) end)
+    comment = comment.update(content: content)
+    :mnesia.transaction(fn -> :mnesia.write(comment) end)
     {:reply, uuid, nil}
   end
 
@@ -96,7 +117,7 @@ defmodule Exblog.DBServer do
   Deletes a comment
   """
   def handle_call({:delete_comment, uuid}, _from, _state) do
-    delete_comment(uuid)
+    :mnesia.transaction(fn -> :mnesia.delete({Comment, uuid}) end)
     {:reply, "ok", nil}
   end
 
@@ -104,73 +125,52 @@ defmodule Exblog.DBServer do
   Returns a comment given a uuid
   """
   def handle_call({:get_comment, uuid}, _from, _state) do
-    {:atomic, [comment | _ ]} = get_comment(uuid)
+    {:atomic, [comment | _ ]} = :mnesia.transaction(fn -> :mnesia.read(Comment, uuid) end)
     {:reply, comment, nil}    
   end
 
-  defp add_post(heading, content, user) do 
-    uuid = :ossp_uuid.make(:v4, :text)
-    post = Post.new id: uuid, created_at: :calendar.local_time(), heading: heading, content: content, user: user    
-    :mnesia.transaction(fn -> :mnesia.write(post) end)
-    uuid
+  # -- interfaces for managing posts
+
+  def add_post(heading, content, user) do 
+    :gen_server.call(:dbserver, {:add_post, heading, content, user})
   end
 
-  defp update_post(uuid, heading, content) do 
-    {:atomic, [post | _ ]} = get_post(uuid)    
-    post = post.update(heading: heading, content: content)
-    :mnesia.transaction(fn -> :mnesia.write(post) end)
-    uuid
+  def update_post(uuid, heading, content) do 
+    :gen_server.call(:dbserver, {:update_post, uuid, heading, content})
   end
 
-  defp delete_post(uuid) do 
-    f = fn -> 
-      :mnesia.delete({Post, uuid}) 
-      {:atomic, comments} = get_comments(uuid)
-      lc comment inlist comments do
-        :mnesia.delete({Comment, comment.id}) 
-      end
-    end
-    :mnesia.transaction(f)
+  def get_post(uuid) do
+    :gen_server.call(:dbserver, {:get_post, uuid})
   end
 
-  defp get_post(uuid) do
-    {:atomic, [post | _ ]} = :mnesia.transaction(fn -> :mnesia.read(Post, uuid) end)
-    post
+  def delete_post(uuid) do 
+    :gen_server.call(:dbserver, {:delete_post, uuid})
   end
 
-  defp get_posts do
-    f = fn -> :mnesia.table(Post) |> :qlc.eval end
-    :mnesia.transaction(f)
+  def get_posts do
+    posts = :gen_server.call(:dbserver, {:get_posts})
   end
 
-  defp add_comment(post_id, content, user) do 
-    uuid = :ossp_uuid.make(:v4, :text)
-    comment = Comment.new id: uuid, created_at: :calendar.local_time(), content: content, user: user, post_id: post_id    
-    :mnesia.transaction(fn -> :mnesia.write(comment) end)
-    uuid
+  # -- interfaces for managing comments 
+
+  def add_comment(post_id, content, user) do 
+    :gen_server.call(:dbserver, {:add_comment, post_id, content, user})
   end
 
-  defp get_comments(uuid) do
-    f = fn -> 
-      pattern = Comment[post_id: uuid, _: :_]
-      :mnesia.match_object(Comment, pattern, :read) 
-    end
-    :mnesia.transaction(f)
+  def get_comments(uuid) do
+    :gen_server.call(:dbserver, {:get_comments, uuid})
   end  
 
-  defp update_comment(uuid, content) do 
-    {:atomic, [comment | _ ]} = get_comment(uuid)
-    comment = comment.update(content: content)
-    :mnesia.transaction(fn -> :mnesia.write(comment) end)
-    uuid
+  def update_comment(uuid, content) do 
+    :gen_server.call(:dbserver, {:update_comment, uuid, content})
   end
 
-  defp delete_comment(uuid) do 
-    :mnesia.transaction(fn -> :mnesia.delete({Comment, uuid}) end)
+  def delete_comment(uuid) do 
+    :gen_server.call(:dbserver, {:delete_comment, uuid})
   end
 
-  defp get_comment(uuid) do
-    :mnesia.transaction(fn -> :mnesia.read(Comment, uuid) end)
+  def get_comment(uuid) do
+    :gen_server.call(:dbserver, {:get_comment, uuid})
   end
 
 end

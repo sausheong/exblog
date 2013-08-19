@@ -55,7 +55,7 @@ def delete_session(conn, key) do
 end
 ```
 
-3. Because we have made changes to one of the dependencies, we need to re-compile all the dependencies (at least the ones we changed)
+3. Because we have made changes to one of the dependencies, we need to re-compile all the dependencies (at least the ones we changed) by running this in the console.
 
 ```
 mix deps.compile

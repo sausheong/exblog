@@ -40,8 +40,6 @@
       <small class="muted">
         <% {{year, month, day}, {hour, min, _sec}} = comment.created_at%>
         by <a href="<%= comment.user.user_link %>"><%= comment.user.user_name%></a> on <%= "#{day}/#{month}/#{year} #{hour}:#{min}"%>
-        <% IO.inspect comment.user %>
-        <% IO.inspect @user %>
         <%= if @user == comment.user do %>
           &middot;
           <a href="/comment/edit/<%= comment.id%>"> edit </a>

@@ -1,6 +1,7 @@
 defmodule ApplicationRouter do
   use Dynamo.Router
   @config Exblog.Dynamo.config
+  import Exblog.DBServer, only: [get_posts: 0]
   
   prepare do
     # Pick which parts of the request you want to fetch
@@ -15,7 +16,7 @@ defmodule ApplicationRouter do
   # routers forwarding the requests between them
   
   get "/" do
-    posts = :gen_server.call(:dbserver, {:get_posts})
+    posts = get_posts
     conn = conn.assign(:posts, posts)
     render conn, "index.html"
   end
@@ -48,7 +49,7 @@ defmodule ApplicationRouter do
     redirect conn, to: "/"
   end
   
-  get "/signout" do
+  get "/signout" do    
     conn = delete_session(conn, :user)
     redirect conn, to: "/"
   end
